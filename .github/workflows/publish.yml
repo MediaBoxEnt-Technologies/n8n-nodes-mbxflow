@@ -1,0 +1,35 @@
+# Publishes n8n-nodes-mbxflow to npm with provenance.
+# Needs an NPM_TOKEN secret (an npm granular token with publish rights on
+# n8n-nodes-mbxflow). It runs when a GitHub release tagged n8n-nodes-mbxflow-v* is published.
+name: Publish n8n-nodes-mbxflow
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'n8n-nodes-mbxflow-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run lint
+      - run: npm test
+
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
