@@ -13,7 +13,7 @@ export class MbxFlowApi implements ICredentialType {
 
 	displayName = 'MBX Flow API';
 
-	icon: Icon = 'file:mbxflow.svg';
+	icon: Icon = { light: 'file:mbxflow.svg', dark: 'file:mbxflow.dark.svg' };
 
 	documentationUrl = 'https://mbxflow.com/developers/api';
 

@@ -1,11 +1,12 @@
 // © 2026 MediaBoxEnt Digital Studio LLC. MIT License, see LICENSE.
 // MBX Flow™ — A product of MediaBoxEnt Technologies.
-import type {
-	IDataObject,
-	INodeExecutionData,
-	INodeType,
-	INodeTypeDescription,
-	IPollFunctions,
+import {
+	NodeConnectionTypes,
+	type IDataObject,
+	type INodeExecutionData,
+	type INodeType,
+	type INodeTypeDescription,
+	type IPollFunctions,
 } from 'n8n-workflow';
 
 import { mbxFlowApiRequest } from '../MbxFlow/GenericFunctions';
@@ -15,7 +16,7 @@ export class MbxFlowTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'MBX Flow Trigger',
 		name: 'mbxFlowTrigger',
-		icon: 'file:mbxflow.svg',
+		icon: { light: 'file:mbxflow.svg', dark: 'file:mbxflow.dark.svg' },
 		group: ['trigger'],
 		version: 1,
 		subtitle: '={{$parameter["event"]}}',
@@ -25,7 +26,7 @@ export class MbxFlowTrigger implements INodeType {
 		},
 		polling: true,
 		inputs: [],
-		outputs: ['main'],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'mbxFlowApi',

@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-mbxflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MBX Flow nodes for n8n: save drafts, schedule posts to your connected social accounts, and start a workflow when a post is published or fails.",
   "keywords": [
     "n8n-community-node-package",
@@ -30,8 +30,8 @@
     "clean": "node scripts/clean.js",
     "build": "node scripts/clean.js && tsc && node scripts/copy-icons.js",
     "dev": "tsc --watch",
-    "lint": "eslint credentials nodes package.json",
-    "lintfix": "eslint credentials nodes package.json --fix",
+    "lint": "n8n-node lint",
+    "lintfix": "n8n-node lint --fix",
     "test": "tsc -p tsconfig.test.json && node --test \".test-build/test/*.test.js\"",
     "prepublishOnly": "npm run build && npm run lint && npm test"
   },
@@ -49,6 +49,7 @@
     "n8n-workflow": "*"
   },
   "devDependencies": {
+    "@n8n/node-cli": "^0.49.1",
     "@types/node": "^20.19.43",
     "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.57.1",

@@ -1,15 +1,18 @@
 // © 2026 MediaBoxEnt Digital Studio LLC. MIT License, see LICENSE.
 // MBX Flow™ — A product of MediaBoxEnt Technologies.
-import type {
-	IDataObject,
-	IExecuteFunctions,
-	ILoadOptionsFunctions,
-	INodeExecutionData,
-	INodePropertyOptions,
-	INodeType,
-	INodeTypeDescription,
+import {
+	NodeApiError,
+	NodeConnectionTypes,
+	NodeOperationError,
+	type IDataObject,
+	type IExecuteFunctions,
+	type ILoadOptionsFunctions,
+	type INodeExecutionData,
+	type INodePropertyOptions,
+	type INodeType,
+	type INodeTypeDescription,
+	type JsonObject,
 } from 'n8n-workflow';
-import { NodeOperationError } from 'n8n-workflow';
 
 import { mbxFlowApiRequest } from './GenericFunctions';
 import {
@@ -25,7 +28,7 @@ export class MbxFlow implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'MBX Flow',
 		name: 'mbxFlow',
-		icon: 'file:mbxflow.svg',
+		icon: { light: 'file:mbxflow.svg', dark: 'file:mbxflow.dark.svg' },
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -34,8 +37,8 @@ export class MbxFlow implements INodeType {
 			name: 'MBX Flow',
 		},
 		usableAsTool: true,
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'mbxFlowApi',
@@ -389,7 +392,14 @@ export class MbxFlow implements INodeType {
 					returnData.push({ json: { error: (error as Error).message }, pairedItem: { item: i } });
 					continue;
 				}
-				throw error;
+				if (error instanceof NodeOperationError) {
+					throw new NodeOperationError(this.getNode(), error.message, { itemIndex: i });
+				}
+				throw new NodeApiError(this.getNode(), error as JsonObject, {
+					itemIndex: i,
+					message: (error as Error).message,
+					description: (error as NodeApiError).description ?? undefined,
+				});
 			}
 		}
 
