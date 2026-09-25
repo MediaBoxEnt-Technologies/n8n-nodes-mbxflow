@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dariotlabs/n8n-nodes-mbxflow.git"
+    "url": "git+https://github.com/MediaBoxEnt-Technologies/n8n-nodes-mbxflow.git"
   },
   "engines": {
     "node": ">=20.15"
@@ -58,7 +58,7 @@
     "typescript": "^5.9.3"
   },
   "bugs": {
-    "url": "https://github.com/dariotlabs/n8n-nodes-mbxflow/issues",
+    "url": "https://github.com/MediaBoxEnt-Technologies/n8n-nodes-mbxflow/issues",
     "email": "support@mbxflow.com"
   }
 }
