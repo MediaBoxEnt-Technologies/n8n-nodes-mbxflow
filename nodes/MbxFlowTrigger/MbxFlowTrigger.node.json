@@ -1,0 +1,10 @@
+{
+  "node": "n8n-nodes-mbxflow.mbxFlowTrigger",
+  "nodeVersion": "1.0",
+  "codexVersion": "1.0",
+  "categories": ["Marketing", "Communication"],
+  "resources": {
+    "credentialDocumentation": [{ "url": "https://mbxflow.com/developers/api" }],
+    "primaryDocumentation": [{ "url": "https://mbxflow.com/developers/api" }]
+  }
+}
