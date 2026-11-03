@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-mbxflow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MBX Flow nodes for n8n: save drafts, schedule posts to your connected social accounts, and start a workflow when a post is published or fails.",
   "keywords": [
     "n8n-community-node-package",

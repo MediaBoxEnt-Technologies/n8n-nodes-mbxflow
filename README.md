@@ -52,7 +52,7 @@ n8n checks the key right away. A green "Connection tested successfully" message 
 | Post | Create Draft | Saves a draft. Text is required; accounts and media links are optional. |
 | Post | Schedule | Schedules a post. Needs text, at least one account, and a date and time. |
 | Post | Get | Gets one post by its ID, for example to check whether it was published. |
-| Post | Get Many | Lists your posts, newest first. You can filter by status (draft, scheduled, published, failed) and choose how many to get, up to 100. |
+| Post | Get Many | Lists your posts, newest first. Use **Filters → Status** to filter by status (draft, scheduled, published, failed) and choose how many to get, up to 100. |
 
 Good to know:
 

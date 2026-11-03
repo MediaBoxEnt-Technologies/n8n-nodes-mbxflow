@@ -20,7 +20,7 @@ function fakeContext(params: Record<string, unknown>, reply: { statusCode: numbe
 		calls,
 		getInputData: () => [{ json: {} }],
 		getNodeParameter: (name: string, _i?: number, fallback?: unknown) => (name in params ? params[name] : fallback),
-		getNode: () => ({ name: 'MBX Flow', type: 'n8n-nodes-mbxflow.mbxFlow', typeVersion: 1, position: [0, 0], parameters: {} }),
+		getNode: () => ({ name: 'MBX Flow', type: 'n8n-nodes-mbxflow.mbxFlow', typeVersion: 1, position: [0, 0], parameters: params }),
 		continueOnFail: () => false,
 		helpers: {
 			httpRequestWithAuthentication: async (credential: string, options: Record<string, unknown>) => {
@@ -72,7 +72,7 @@ test('Schedule: POST /posts with accountIds, media and ISO scheduledAt', async (
 });
 
 test('Get Many posts: status and limit go in the query string', async () => {
-	const ctx = fakeContext({ resource: 'post', operation: 'getAll', status: 'failed', limit: 5 }, { statusCode: 200, body: { posts: [post, { ...post, id: 'p2' }] } });
+	const ctx = fakeContext({ resource: 'post', operation: 'getAll', filters: { status: 'failed' }, limit: 5 }, { statusCode: 200, body: { posts: [post, { ...post, id: 'p2' }] } });
 	const out = await new MbxFlow().execute.call(ctx as never);
 	assert.equal(ctx.calls[0].options.method, 'GET');
 	assert.equal(ctx.calls[0].options.url, '/posts');
@@ -145,3 +145,17 @@ test('a 402 (plan required) shows the API "error" text', async () => {
 		return true;
 	});
 });
+
+for (const [label, params, expected] of [
+ ['no filter', {}, { limit: 50 }],
+ ['empty filters', { filters: {} }, { limit: 50 }],
+ ['legacy status', { status: 'published' }, { status: 'published', limit: 50 }],
+ ['new filter overrides legacy', { filters: { status: 'draft' }, status: 'published' }, { status: 'draft', limit: 50 }],
+ ['Any overrides legacy', { filters: { status: '' }, status: 'published' }, { limit: 50 }],
+] as const) {
+ test(`Get Many posts: ${label}`, async () => {
+  const ctx = fakeContext({ resource: 'post', operation: 'getAll', ...params }, { statusCode: 200, body: { posts: [] } });
+  await new MbxFlow().execute.call(ctx as never);
+  assert.deepEqual(ctx.calls[0].options.qs, expected);
+ });
+}

@@ -252,11 +252,11 @@ export class MbxFlow implements INodeType {
 				},
 			},
 			{
-				displayName: 'Status',
-				name: 'status',
-				type: 'options',
-				default: '',
-				description: 'Only list posts with this status',
+				displayName: 'Filters',
+				name: 'filters',
+				type: 'collection',
+				placeholder: 'Add Filter',
+				default: {},
 				displayOptions: {
 					show: {
 						resource: ['post'],
@@ -265,24 +265,33 @@ export class MbxFlow implements INodeType {
 				},
 				options: [
 					{
-						name: 'Any',
-						value: '',
-					},
-					{
-						name: 'Draft',
-						value: 'draft',
-					},
-					{
-						name: 'Failed',
-						value: 'failed',
-					},
-					{
-						name: 'Published',
-						value: 'published',
-					},
-					{
-						name: 'Scheduled',
-						value: 'scheduled',
+						displayName: 'Status',
+						name: 'status',
+						type: 'options',
+						default: '',
+						description: 'Only list posts with this status',
+						options: [
+							{
+								name: 'Any',
+								value: '',
+							},
+							{
+								name: 'Draft',
+								value: 'draft',
+							},
+							{
+								name: 'Failed',
+								value: 'failed',
+							},
+							{
+								name: 'Published',
+								value: 'published',
+							},
+							{
+								name: 'Scheduled',
+								value: 'scheduled',
+							},
+						],
 					},
 				],
 			},
@@ -368,8 +377,13 @@ export class MbxFlow implements INodeType {
 					);
 					results = [response.post as IDataObject];
 				} else if (resource === 'post' && operation === 'getAll') {
+					const filters = this.getNodeParameter('filters', i, {}) as IDataObject;
+					// Keep saved workflows from before the Filters collection working.
+					const legacyStatus = this.getNode().parameters.status === undefined
+						? ''
+						: this.getNodeParameter('status', i, '');
 					const qs = buildListPostsQuery(
-						this.getNodeParameter('status', i, '') as string,
+						(filters.status ?? legacyStatus ?? '') as string,
 						this.getNodeParameter('limit', i, DEFAULT_LIMIT) as number,
 					);
 					const response = await mbxFlowApiRequest.call(this, 'GET', '/posts', { qs }, i);
